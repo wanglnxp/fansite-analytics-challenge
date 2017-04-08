@@ -209,22 +209,27 @@ def feature4(input_file, output_file):
             record = temp[1].split()
             print record
             if record[7] == '304':
+                date = datetime.strptime(record[2][1:], '%d/%b/%Y:%H:%M:%S')
+                time_in_sec = time.mktime(date.timetuple())
                 if ip in time_record:
-                    sec_time = datetime.strptime(record[2][1:], '%d/%b/%Y:%H:%M:%S')
-                    if sec_time - time_record[ip] < 20:
-                        time_record[ip] += 1
+                    print record[2][1:]
+                    print time_in_sec
+                    if time_in_sec - time_record[ip][0] < 20:
+                        time_record[ip][1] += 1
                         if time_record[ip] >= 3:
                             result_record[ip] = record
                     else:
                         time_record.pop(ip)
                 else:
-                    time_record[ip] = 1
-            elif record[7] == '401':
+                    time_record[ip] = [time_in_sec, 1]
+            elif record[7] == '200':
                 if ip in time_record:
                     time_record.pop(ip)
 
     mm.close()
     f.close()
+
+    print result_record
 
     f = write_file(output_file)
     for key, value in result_record:

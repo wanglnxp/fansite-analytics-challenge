@@ -163,7 +163,6 @@ def feature3(input_file, output_file):
 
         res_heap.append((-window_times, d_time))
         start_time += 1
-    print res_heap
 
     # res_heap[12] = (12, res_heap[12][1])
 
@@ -176,7 +175,6 @@ def feature3(input_file, output_file):
         temp = []
         if len(res_heap) != 0:
             temp.append(heapq.heappop(res_heap))
-            print res_heap
             while len(res_heap) != 0 and res_heap[0][0] == temp[0][0]:
                 temp.append(heapq.heappop(res_heap))
             temp = sorted(temp, key=lambda x: (datetime.strptime(x[1], '%d/%b/%Y:%H:%M:%S')))
@@ -192,38 +190,51 @@ def feature3(input_file, output_file):
     f = write_file(output_file)
     for key, value in sort_time:
         result = "%s -0400,%s\n" % (value, -key)
-        print result
         f.write(result)
     f.close()
 
 
 def feature4(input_file, output_file):
-    print "feature4"
+    # found 304, record in dictionary with IP as key, and rest of things as value
+    time_record = {}
+    result_record = {}
     f, mm = read_file(input_file)
 
-    time_times = []
     for line in iter(mm.readline, ""):
         temp = line.split(" ", 1)
         ip = temp[0]
         if len(ip) < 1:
             continue
         else:
-            record = temp[1][5:].split()
-            time_stamp = record[0]
-            if len(time_times) < 1 or time_times[-1][0] != time_stamp:
-                time_times.append((time_stamp, 1))
-            else:
-                new_times = time_times[-1][1] + 1
-                time_times[-1] = (time_stamp, new_times)
+            record = temp[1].split()
+            print record
+            if record[7] == '304':
+                if ip in time_record:
+                    sec_time = datetime.strptime(record[2][1:], '%d/%b/%Y:%H:%M:%S')
+                    print record[2][1:]
+                    print sec_time
+                    if sec_time - time_record[ip] < 20:
+                        time_record[ip] += 1
+                        if time_record[ip] >= 3:
+                            result_record[ip] = record
+                    else:
+                        time_record.pop(ip)
+                else:
+                    time_record[ip] = [record[2][1:], 1]
+            elif record[7] == '401':
+                if ip in time_record:
+                    time_record.pop(ip)
 
     mm.close()
     f.close()
 
     f = write_file(output_file)
-    for key, value in sort_time:
-        result = "%s -0400,%s\n" % (value, key)
-        print result
-        f.write(result)
+    for key, value in result_record:
+        time_record = "%s %s %s %s %s %s %s %s %s %s\n" \
+                      % (key, value[0], value[1], value[2], value[3],
+                         value[4], value[5], value[6], value[7], value[8])
+        print time_record
+        f.write(time_record)
     f.close()
 
 

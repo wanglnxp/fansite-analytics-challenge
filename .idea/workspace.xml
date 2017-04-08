@@ -24,8 +24,8 @@
       <file leaf-file-name="process_log.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/process_log.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8289902">
-              <caret line="226" column="13" selection-start-line="226" selection-start-column="13" selection-end-line="226" selection-end-column="13" />
+            <state vertical-scroll-proportion="0.51731604">
+              <caret line="233" column="29" selection-start-line="233" selection-start-column="29" selection-end-line="233" selection-end-column="29" />
               <folding>
                 <element signature="e#142#155#0" expanded="true" />
               </folding>
@@ -43,10 +43,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="190" />
-    <option name="y" value="103" />
+    <option name="x" value="188" />
+    <option name="y" value="176" />
     <option name="width" value="1090" />
-    <option name="height" value="738" />
+    <option name="height" value="586" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="false">
     <OptionsSetting value="true" id="Add" />
@@ -251,7 +251,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="190" y="103" width="1090" height="738" extended-state="0" />
+    <frame x="188" y="176" width="1090" height="586" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21376146" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -283,8 +283,8 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/process_log.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8289902">
-          <caret line="226" column="13" selection-start-line="226" selection-start-column="13" selection-end-line="226" selection-end-column="13" />
+        <state vertical-scroll-proportion="0.51731604">
+          <caret line="233" column="29" selection-start-line="233" selection-start-column="29" selection-end-line="233" selection-end-column="29" />
           <folding>
             <element signature="e#142#155#0" expanded="true" />
           </folding>
