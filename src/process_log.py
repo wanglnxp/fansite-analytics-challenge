@@ -30,7 +30,7 @@ def exit_gracefully(signum, frame):
 
 
 def read_file(file_path):
-    print "reading file", file_path
+    # print "reading file", file_path
     if os.path.exists(file_path):
         try:
             f = open(file_path, 'r')
@@ -45,7 +45,7 @@ def read_file(file_path):
 
 
 def write_file(file_path):
-    print "opening file", file_path
+    # print "opening file", file_path
     try:
         f = open(file_path, 'w')
     except IOError:
@@ -195,9 +195,9 @@ def feature3(input_file, output_file):
 
 
 def feature4(input_file, output_file):
-    # found 304, record in dictionary with IP as key, and rest of things as value
-    time_record = {}
-    result_record = {}
+    fail_record = {}  # record failed login
+    in_block = {}  # record 5 minute blocking IP
+    block_record = []  # record blocked login attempts during 5 minute
     f, mm = read_file(input_file)
 
     for line in iter(mm.readline, ""):
@@ -207,37 +207,41 @@ def feature4(input_file, output_file):
             continue
         else:
             record = temp[1].split()
-            print record
-            if record[7] == '304':
+
+            if record[5] == '/login':
                 date = datetime.strptime(record[2][1:], '%d/%b/%Y:%H:%M:%S')
                 time_in_sec = time.mktime(date.timetuple())
-                if ip in time_record:
-                    print record[2][1:]
-                    print time_in_sec
-                    if time_in_sec - time_record[ip][0] < 20:
-                        time_record[ip][1] += 1
-                        if time_record[ip] >= 3:
-                            result_record[ip] = record
+                if ip in in_block:
+                    if time_in_sec - in_block[ip] > 5 * 60:
+                        block_record.pop(ip)
                     else:
-                        time_record.pop(ip)
+                        block_record.append([ip] + record)
+                        continue
+
+                if record[7] != '200':
+                    if ip in fail_record:
+                        if time_in_sec - fail_record[ip][0] > 20:
+                            fail_record[ip] = (time_in_sec, 1)
+                        else:
+                            fail_times = fail_record[ip][1] + 1
+                            if fail_times == 3:
+                                in_block[ip] = time_in_sec
+                                fail_record.pop(ip)
+                            else:
+                                fail_record[ip] = (fail_record[ip][0], fail_times)
+                    else:
+                        fail_record[ip] = (time_in_sec, 1)
                 else:
-                    time_record[ip] = [time_in_sec, 1]
-            elif record[7] == '200':
-                if ip in time_record:
-                    time_record.pop(ip)
+                    if ip in fail_record:
+                        fail_record.pop(ip)
 
     mm.close()
     f.close()
 
-    print result_record
-
     f = write_file(output_file)
-    for key, value in result_record:
-        time_record = "%s %s %s %s %s %s %s %s %s %s\n" \
-                      % (key, value[0], value[1], value[2], value[3],
-                         value[4], value[5], value[6], value[7], value[8])
-        print time_record
-        f.write(time_record)
+    for item in block_record:
+        result = " ".join(item) + "\n"
+        f.write(result)
     f.close()
 
 
